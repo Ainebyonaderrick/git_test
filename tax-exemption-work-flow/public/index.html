@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tax Exemption Application</title>
+
+  <style>
+    body{
+      font-family: Arial;
+      margin:40px;
+      background:#f4f6f9;
+    }
+
+    .container{
+      width:400px;
+      margin:auto;
+      padding:20px;
+      background:white;
+      border-radius:8px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    input,button{
+      width:100%;
+      margin-top:10px;
+      padding:10px;
+    }
+
+    button{
+      background:#007bff;
+      color:white;
+      border:none;
+      cursor:pointer;
+    }
+
+    button:hover{
+      background:#0056b3;
+    }
+
+    #result{
+      margin-top:15px;
+      color:green;
+      font-weight:bold;
+    }
+  </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Tax Exemption Application</h2>
+
+<form id="applicationForm">
+
+<input type="text" id="applicant" placeholder="Applicant Name" required>
+
+<input type="file" id="documents" accept=".pdf,.doc,.docx,.png,.jpg" required>
+
+<label>
+<input type="checkbox" id="taxDebt">
+Has Tax Debt
+</label>
+
+<button type="submit">Submit Application</button>
+
+</form>
+
+<p id="result"></p>
+
+</div>
+
+<script>
+
+document.getElementById("applicationForm").addEventListener("submit", async function(e){
+
+e.preventDefault();
+
+const formData = new FormData();
+
+formData.append("applicant",
+document.getElementById("applicant").value);
+
+formData.append("documents",
+document.getElementById("documents").files[0]);
+
+formData.append("taxDebt",
+document.getElementById("taxDebt").checked);
+
+try{
+
+const response = await fetch("/api/apply",{
+method:"POST",
+body:formData
+});
+
+const result = await response.json();
+
+document.getElementById("result").innerText =
+"Application submitted. ID: " + result.id;
+
+}catch(err){
+
+document.getElementById("result").innerText =
+"Error submitting application";
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
